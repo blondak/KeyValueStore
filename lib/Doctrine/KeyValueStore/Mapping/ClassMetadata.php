@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -20,22 +19,21 @@
 
 namespace Doctrine\KeyValueStore\Mapping;
 
-use Doctrine\Common\Persistence\Mapping\ClassMetadata as BaseClassMetadata;
-use ReflectionClass;
+use Doctrine\Persistence\Mapping\ClassMetadata as BaseClassMetadata;
 
 class ClassMetadata implements BaseClassMetadata
 {
     public $name;
     public $storageName;
     public $rootClassName;
-    public $fields          = [];
-    public $identifier      = [];
-    public $isCompositeKey  = false;
-    public $transientFields = [];
-    public $reflFields      = [];
+    public $fields = array();
+    public $identifier = array();
+    public $isCompositeKey = false;
+    public $transientFields = array();
+    public $reflFields = array();
     public $reflClass;
 
-    private $prototype;
+    private $_prototype;
 
     public function __construct($className)
     {
@@ -44,14 +42,14 @@ class ClassMetadata implements BaseClassMetadata
 
     public function mapIdentifier($fieldName)
     {
-        $this->identifier[]   = $fieldName;
+        $this->identifier[] = $fieldName;
         $this->isCompositeKey = count($this->identifier) > 1;
-        $this->mapField(['fieldName' => $fieldName, 'id' => true]);
+        $this->mapField(array('fieldName' => $fieldName, 'id' => true));
     }
 
     public function mapField($mapping)
     {
-        if (! isset($this->transientFields[$mapping['fieldName']])) {
+        if ( ! isset($this->transientFields[$mapping['fieldName']])) {
             $this->fields[$mapping['fieldName']] = $mapping;
         }
     }
@@ -71,21 +69,21 @@ class ClassMetadata implements BaseClassMetadata
      */
     public function newInstance()
     {
-        if ($this->prototype === null) {
-            $this->prototype = unserialize(sprintf('O:%d:"%s":0:{}', strlen($this->name), $this->name));
+        if ($this->_prototype === null) {
+            $this->_prototype = unserialize(sprintf('O:%d:"%s":0:{}', strlen($this->name), $this->name));
         }
 
-        return clone $this->prototype;
+        return clone $this->_prototype;
     }
 
     public function __sleep()
     {
-        return ['fields', 'isCompositeKey', 'identifier', 'name', 'storageName'];
+        return array('fields', 'isCompositeKey', 'identifier', 'name', 'storageName');
     }
 
     public function getIdentifierValues($object)
     {
-        $id = [];
+        $id = array();
         foreach ($this->identifier as $field) {
             $value = $this->reflFields[$field]->getValue($object);
             if ($value !== null) {
@@ -94,16 +92,12 @@ class ClassMetadata implements BaseClassMetadata
         }
         return $id;
     }
-
     /**
      * Get fully-qualified class name of this persistent class.
      *
      * @return string
      */
-    public function getName()
-    {
-        return $this->name;
-    }
+    function getName(){}
 
     /**
      * Gets the mapped identifier field name.
@@ -112,80 +106,54 @@ class ClassMetadata implements BaseClassMetadata
      *
      * @return array
      */
-    public function getIdentifier()
-    {
-        return $this->identifier;
-    }
+    function getIdentifier(){}
 
     /**
      * Gets the ReflectionClass instance for this mapped class.
      *
      * @return ReflectionClass
      */
-    public function getReflectionClass()
-    {
-        return new ReflectionClass($this->name);
-    }
+    function getReflectionClass(){}
 
     /**
      * Checks if the given field name is a mapped identifier for this class.
      *
      * @param string $fieldName
-     *
-     * @return bool
+     * @return boolean
      */
-    public function isIdentifier($fieldName)
-    {
-        return in_array($fieldName, $this->identifier);
-    }
+    function isIdentifier($fieldName){}
 
     /**
      * Checks if the given field is a mapped property for this class.
      *
      * @param string $fieldName
-     *
-     * @return bool
+     * @return boolean
      */
-    public function hasField($fieldName)
-    {
-        return isset($this->fields[$fieldName]);
-    }
+    function hasField($fieldName){}
 
     /**
      * Checks if the given field is a mapped association for this class.
      *
      * @param string $fieldName
-     *
-     * @return bool
+     * @return boolean
      */
-    public function hasAssociation($fieldName)
-    {
-        return false;
-    }
+    function hasAssociation($fieldName){}
 
     /**
      * Checks if the given field is a mapped single valued association for this class.
      *
      * @param string $fieldName
-     *
-     * @return bool
+     * @return boolean
      */
-    public function isSingleValuedAssociation($fieldName)
-    {
-        return false;
-    }
+    function isSingleValuedAssociation($fieldName){}
 
     /**
      * Checks if the given field is a mapped collection valued association for this class.
      *
      * @param string $fieldName
-     *
-     * @return bool
+     * @return boolean
      */
-    public function isCollectionValuedAssociation($fieldName)
-    {
-        return false;
-    }
+    function isCollectionValuedAssociation($fieldName){}
 
     /**
      * A numerically indexed list of field names of this persistent class.
@@ -194,20 +162,14 @@ class ClassMetadata implements BaseClassMetadata
      *
      * @return array
      */
-    public function getFieldNames()
-    {
-        return array_column($this->fields, 'fieldName');
-    }
+    function getFieldNames(){}
 
     /**
      * Returns an array of identifier field names numerically indexed.
      *
      * @return array
      */
-    public function getIdentifierFieldNames()
-    {
-        return $this->identifier;
-    }
+    function getIdentifierFieldNames(){}
 
     /**
      * A numerically indexed list of association names of this persistent class.
@@ -216,9 +178,7 @@ class ClassMetadata implements BaseClassMetadata
      *
      * @return array
      */
-    public function getAssociationNames()
-    {
-    }
+    function getAssociationNames(){}
 
     /**
      * Returns a type name of this field.
@@ -227,44 +187,32 @@ class ClassMetadata implements BaseClassMetadata
      * integer, string, boolean, float/double, datetime.
      *
      * @param string $fieldName
-     *
      * @return string
      */
-    public function getTypeOfField($fieldName)
-    {
-    }
+    function getTypeOfField($fieldName){}
 
     /**
      * Returns the target class name of the given association.
      *
      * @param string $assocName
-     *
      * @return string
      */
-    public function getAssociationTargetClass($assocName)
-    {
-    }
+    function getAssociationTargetClass($assocName){}
 
     /**
      * Checks if the association is the inverse side of a bidirectional association
      *
      * @param string $assocName
-     *
-     * @return bool
+     * @return boolean
      */
-    public function isAssociationInverseSide($assocName)
-    {
-        return false;
-    }
+    function isAssociationInverseSide($assocName){}
 
     /**
      * Returns the target field of the owning side of the association
      *
      * @param string $assocName
-     *
      * @return string
      */
-    public function getAssociationMappedByTargetField($assocName)
-    {
-    }
+    function getAssociationMappedByTargetField($assocName){}
 }
+

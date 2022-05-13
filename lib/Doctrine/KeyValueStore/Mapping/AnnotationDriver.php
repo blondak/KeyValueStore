@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -20,25 +19,14 @@
 
 namespace Doctrine\KeyValueStore\Mapping;
 
-use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Persistence\Mapping\ClassMetadata;
-use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
+use Doctrine\Persistence\Mapping\ClassMetadata;
+use Doctrine\Persistence\Mapping\Driver\MappingDriver;
 
 class AnnotationDriver implements MappingDriver
 {
-    /**
-     * Doctrine common annotations reader.
-     *
-     * @var AnnotationReader
-     */
     private $reader;
 
-    /**
-     * Constructor with required dependencies.
-     *
-     * @param $reader AnnotationReader Doctrine common annotations reader.
-     */
-    public function __construct(AnnotationReader $reader)
+    public function __construct($reader)
     {
         $this->reader = $reader;
     }
@@ -46,40 +34,34 @@ class AnnotationDriver implements MappingDriver
     /**
      * Loads the metadata for the specified class into the provided container.
      *
-     * @param string        $className
+     * @param string $className
      * @param ClassMetadata $metadata
      */
-    public function loadMetadataForClass($className, ClassMetadata $metadata)
+    function loadMetadataForClass($className, ClassMetadata $metadata)
     {
         $class = $metadata->getReflectionClass();
-        if (! $class) {
+        if (!$class) {
             // this happens when running annotation driver in combination with
             // static reflection services. This is not the nicest fix
             $class = new \ReflectionClass($metadata->name);
         }
 
         $entityAnnot = $this->reader->getClassAnnotation($class, 'Doctrine\KeyValueStore\Mapping\Annotations\Entity');
-        if (! $entityAnnot) {
-            throw new \InvalidArgumentException($metadata->name . ' is not a valid key-value-store entity.');
+        if (!$entityAnnot) {
+            throw new \InvalidArgumentException($metadata->name . " is not a valid key-value-store entity.");
         }
         $metadata->storageName = $entityAnnot->storageName;
 
         // Evaluate annotations on properties/fields
         foreach ($class->getProperties() as $property) {
-            $idAnnot        = $this->reader->getPropertyAnnotation(
-                $property,
-                'Doctrine\KeyValueStore\Mapping\Annotations\Id'
-            );
-            $transientAnnot = $this->reader->getPropertyAnnotation(
-                $property,
-                'Doctrine\KeyValueStore\Mapping\Annotations\Transient'
-            );
+            $idAnnot = $this->reader->getPropertyAnnotation($property, 'Doctrine\KeyValueStore\Mapping\Annotations\Id');
+            $transientAnnot = $this->reader->getPropertyAnnotation($property, 'Doctrine\KeyValueStore\Mapping\Annotations\Transient');
             if ($idAnnot) {
                 $metadata->mapIdentifier($property->getName());
-            } elseif ($transientAnnot) {
+            } else if ($transientAnnot) {
                 $metadata->skipTransientField($property->getName());
             } else {
-                $metadata->mapField(['fieldName' => $property->getName()]);
+                $metadata->mapField(array('fieldName' => $property->getName()));
             }
         }
     }
@@ -89,7 +71,7 @@ class AnnotationDriver implements MappingDriver
      *
      * @return array The names of all mapped classes known to this driver.
      */
-    public function getAllClassNames()
+    function getAllClassNames()
     {
     }
 
@@ -99,11 +81,11 @@ class AnnotationDriver implements MappingDriver
      * MappedSuperclass.
      *
      * @param string $className
-     *
-     * @return bool
+     * @return boolean
      */
-    public function isTransient($className)
+    function isTransient($className)
     {
         return false;
     }
 }
+

@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -20,9 +19,9 @@
 
 namespace Doctrine\KeyValueStore;
 
+use Doctrine\KeyValueStore\Storage\Storage;
 use Doctrine\KeyValueStore\Mapping\ClassMetadataFactory;
 use Doctrine\KeyValueStore\Query\RangeQuery;
-use Doctrine\KeyValueStore\Storage\Storage;
 
 /**
  * EntityManager for KeyValue stored objects.
@@ -44,7 +43,7 @@ class EntityManager
     /**
      * Create a new EntityManager
      *
-     * @param Storage       $storageDriver
+     * @param Storage $storageDriver
      * @param Configuration $config
      */
     public function __construct(Storage $storageDriver, Configuration $config)
@@ -59,14 +58,13 @@ class EntityManager
     /**
      * Find objects by key
      *
-     * @param string       $className
+     * @param string $className
      * @param string|array $key
-     *
      * @return object
      */
     public function find($className, $key)
     {
-        return $this->unitOfWork->reconstititute($className, $key);
+        return $this->unitOfWork->reconsititute($className, $key);
     }
 
     /**
@@ -78,7 +76,6 @@ class EntityManager
      *
      * @param string $className
      * @param string $partitionKey
-     *
      * @return \Doctrine\KeyValueStore\Query\RangeQuery
      */
     public function createRangeQuery($className, $partitionKey)
@@ -90,6 +87,7 @@ class EntityManager
      * Persist new object in key value storage.
      *
      * @param object $object
+     * @return void
      */
     public function persist($object)
     {
@@ -100,6 +98,7 @@ class EntityManager
      * Remove object
      *
      * @param object $object
+     * @return void
      */
     public function remove($object)
     {
@@ -109,6 +108,8 @@ class EntityManager
     /**
      * Flush all outstanding changes from the managed object-graph into the
      * key-value storage.
+     *
+     * @return void
      */
     public function flush()
     {
@@ -138,7 +139,6 @@ class EntityManager
 
     /**
      * @param string $className
-     *
      * @return Mapping\ClassMetadata
      */
     public function getClassMetadata($className)
@@ -146,3 +146,4 @@ class EntityManager
         return $this->unitOfWork->getClassMetadata($className);
     }
 }
+

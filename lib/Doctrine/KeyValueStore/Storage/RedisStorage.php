@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -17,6 +16,7 @@
  * and is licensed under the MIT license. For more information, see
  * <http://www.doctrine-project.org>.
  */
+
 
 namespace Doctrine\KeyValueStore\Storage;
 
@@ -48,15 +48,15 @@ class RedisStorage implements Storage
      * Constructor
      *
      * @param \Redis $redis
-     * @param array  $dbOptions
+     * @param array $dbOptions
      */
-    public function __construct($redis, $dbOptions = [])
+    public function __construct($redis, $dbOptions = array())
     {
         $this->client = $redis;
 
-        $this->dbOptions = array_merge([
-            'keyPrefix' => $this->keyPrefix,
-        ], $dbOptions);
+        $this->dbOptions = array_merge(array(
+            'keyPrefix' => $this->keyPrefix
+        ), $dbOptions);
     }
 
     /**
@@ -138,8 +138,7 @@ class RedisStorage implements Storage
     /**
      * Add prefix to Redis key space name
      *
-     * @param string $key
-     *
+     * @param  string $key
      * @return string
      */
     public function getKeyName($key)

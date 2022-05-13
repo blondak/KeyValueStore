@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -20,8 +19,8 @@
 
 namespace Doctrine\KeyValueStore\Storage;
 
-use Doctrine\DBAL\Connection;
 use Doctrine\KeyValueStore\NotFoundException;
+use Doctrine\DBAL\Connection;
 
 /**
  * Relational databased backed system.
@@ -37,15 +36,11 @@ class DBALStorage implements Storage
     private $keyColumn;
     private $dataColumn;
 
-    public function __construct(
-        Connection $conn,
-        $table = 'storage',
-        $keyColumn = 'id',
-        $dataColumn = 'serialized_data'
-    ) {
-        $this->conn       = $conn;
-        $this->table      = $table;
-        $this->keyColumn  = $keyColumn;
+    public function __construct(Connection $conn, $table = 'storage', $keyColumn = 'id', $dataColumn = 'serialized_data')
+    {
+        $this->conn = $conn;
+        $this->table = $table;
+        $this->keyColumn = $keyColumn;
         $this->dataColumn = $dataColumn;
     }
 
@@ -78,16 +73,17 @@ class DBALStorage implements Storage
      * Insert data into the storage key specified.
      *
      * @param array|string $key
-     * @param array        $data
+     * @param array $data
+     * @return void
      */
-    public function insert($storageName, $key, array $data)
+    function insert($storageName, $key, array $data)
     {
         try {
-            $this->conn->insert($this->table, [
-                $this->keyColumn  => $key,
-                $this->dataColumn => serialize($data),
-            ]);
-        } catch (\Exception $e) {
+            $this->conn->insert($this->table, array(
+                $this->keyColumn => $key,
+                $this->dataColumn => serialize($data)
+            ));
+        } catch(\Exception $e) {
         }
     }
 
@@ -95,17 +91,18 @@ class DBALStorage implements Storage
      * Update data into the given key.
      *
      * @param array|string $key
-     * @param array        $data
+     * @param array $data
+     * @return void
      */
     public function update($storageName, $key, array $data)
     {
         try {
-            $this->conn->update($this->table, [
-                $this->dataColumn => serialize($data),
-            ], [
-                $this->keyColumn => $key,
-            ]);
-        } catch (\Exception $e) {
+            $this->conn->update($this->table, array(
+                $this->dataColumn => serialize($data)
+            ), array(
+                $this->keyColumn => $key
+            ));
+        } catch(\Exception $e) {
         }
     }
 
@@ -113,12 +110,13 @@ class DBALStorage implements Storage
      * Delete data at key
      *
      * @param array|string $key
+     * @return void
      */
     public function delete($storageName, $key)
     {
         try {
-            $this->conn->delete($this->table, [$this->keyColumn => $key]);
-        } catch (\Exception $e) {
+            $this->conn->delete($this->table, array($this->keyColumn => $key));
+        } catch(\Exception $e) {
         }
     }
 
@@ -126,23 +124,22 @@ class DBALStorage implements Storage
      * Find data at key
      *
      * @param array|string $key
-     *
      * @return array
      */
     public function find($storageName, $key)
     {
         $qb = $this->conn->createQueryBuilder();
 
-        $qb->select('s.' . $this->dataColumn)
+        $qb->select("s.{$this->dataColumn}")
             ->from($this->table, 's')
-            ->where($this->keyColumn . ' = ?')
-            ->setParameters([$key]);
+            ->where("{$this->keyColumn} = ?")
+            ->setParameters(array($key));
 
         $stmt = $qb->execute();
 
         $data = $stmt->fetchColumn();
 
-        if (! $data) {
+        if (!$data) {
             throw new NotFoundException();
         }
 
@@ -159,3 +156,4 @@ class DBALStorage implements Storage
         return 'dbal';
     }
 }
+

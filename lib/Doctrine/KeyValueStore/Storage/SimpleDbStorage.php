@@ -1,30 +1,29 @@
 <?php
-
 /*
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * This software consists of voluntary contributions made by many individuals
- * and is licensed under the MIT license. For more information, see
- * <http://www.doctrine-project.org>.
- */
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+* "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+* LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+* A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+* OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+* SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+* LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+* DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+* THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+* OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*
+* This software consists of voluntary contributions made by many individuals
+* and is licensed under the MIT license. For more information, see
+* <http://www.doctrine-project.org>.
+*/
 
 namespace Doctrine\KeyValueStore\Storage;
 
+use Doctrine\KeyValueStore\NotFoundException;
+use Doctrine\KeyValueStore\KeyValueStoreException;
+use Aws\SimpleDb\SimpleDbClient;
 use Aws\SimpleDb\Exception\NoSuchDomainException;
 use Aws\SimpleDb\Exception\SimpleDbException;
-use Aws\SimpleDb\SimpleDbClient;
-use Doctrine\KeyValueStore\KeyValueStoreException;
-use Doctrine\KeyValueStore\NotFoundException;
 
 /**
  * SimpleDb storage
@@ -79,11 +78,11 @@ class SimpleDbStorage implements Storage
     {
         $this->createDomain($storageName);
 
-        $this->client->putAttributes([
+        $this->client->putAttributes(array(
             'DomainName' => $storageName,
             'ItemName'   => $key,
             'Attributes' => $this->makeAttributes($data),
-        ]);
+        ));
     }
 
     /**
@@ -99,10 +98,10 @@ class SimpleDbStorage implements Storage
      */
     public function delete($storageName, $key)
     {
-        $this->client->deleteAttributes([
+        $this->client->deleteAttributes(array(
             'DomainName' => $storageName,
             'ItemName'   => $key,
-        ]);
+        ));
     }
 
     /**
@@ -110,19 +109,19 @@ class SimpleDbStorage implements Storage
      */
     public function find($storageName, $key)
     {
-        $select = 'select * from ' . $storageName . ' where itemName() = \'' . $key . '\'';
+        $select = "select * from {$storageName} where itemName() = '{$key}'";
 
-        $iterator = $this->client->select([
+        $iterator = $this->client->select(array(
             'SelectExpression' => $select,
-        ]);
-
+        ));
+        
         $results = $iterator->get('Items');
 
         if (count($results)) {
             $result = array_shift($results);
 
-            $data = ['id' => $result['Name']];
-
+            $data = array('id' => $result['Name']);
+        
             foreach ($result['Attributes'] as $attribute) {
                 $data[$attribute['Name']] = $attribute['Value'];
             }
@@ -149,11 +148,11 @@ class SimpleDbStorage implements Storage
     protected function createDomain($domainName)
     {
         try {
-            $domain = $this->client->domainMetadata(['DomainName' => $domainName]);
+            $domain = $this->client->domainMetadata(array('DomainName' => $domainName));
         } catch (NoSuchDomainException $e) {
-            $this->client->createDomain(['DomainName' => $domainName]);
+            $this->client->createDomain(array('DomainName' => $domainName));
 
-            $domain = $this->client->domainMetadata(['DomainName' => $domainName]);
+            $domain = $this->client->domainMetadata(array('DomainName' => $domainName));
         } catch (SimpleDbException $e) {
             throw new KeyValueStoreException($e->getMessage(), 0, $e);
         }
@@ -162,20 +161,20 @@ class SimpleDbStorage implements Storage
     }
 
     /**
-     * @param string $key
-     * @param array  $data
+     * @param string $key 
+     * @param array $data 
      */
     protected function makeAttributes($data)
     {
-        $attributes = [];
+        $attributes = array();
 
         foreach ($data as $name => $value) {
-            if ($value !== null && $value !== [] && $value !== '') {
-                $attributes[] = [
-                    'Name'    => $name,
-                    'Value'   => $value,
+            if ($value !== null && $value !== array() && $value !== '') {
+                $attributes[] = array(
+                    'Name' => $name,
+                    'Value' => $value,
                     'Replace' => true,
-                ];
+                );
             }
         }
 

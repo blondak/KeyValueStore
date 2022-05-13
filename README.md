@@ -1,7 +1,5 @@
 # Doctrine Key Value Stores
 
-[![Build Status](https://travis-ci.org/doctrine/KeyValueStore.svg?branch=master)](https://travis-ci.org/doctrine/KeyValueStore)
-
 The Persistence interfaces are rather overkill for many implementations in the NoSQL world that are only key-value stores with some additional features on top. Doctrine Key Value Store to the rescue. This project offers a much simpler lightweight API that is centered on a key-value API to fetch/save objects.
 
 * Single- or multi-value primary keys
@@ -12,7 +10,7 @@ The Persistence interfaces are rather overkill for many implementations in the N
 * No support for references to other objects
 * EventListener for ODM/ORM that allows to manage key-value entities and collections of them as properties (postLoad, postUpdate, postPersist, postRemove)
 * Stripped down Object Manager Interface
-* Data-mapper as any other Doctrine library and persistence and data-objects are separated.
+* Data-mapper as any other Doctrine library and persistence and data-objects are seperated.
 * Inheritance (Single- or Multiple-Storage)
 
 ## Implementations
@@ -23,9 +21,8 @@ Following vendors are targeted:
 * Doctrine\Common\Cache provider (Implemented)
 * RDBMS (Implemented)
 * Couchbase (Implemented)
-* Amazon DynamoDB (Implemented)
-* CouchDB (Implemented)
-* Cassandra
+* Amazon DynamoDB
+* CouchDB
 * MongoDB (Implemented)
 * Riak (Implemented)
 * Redis (Implemented)

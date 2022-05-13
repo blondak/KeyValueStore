@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -14,41 +13,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * This software consists of voluntary contributions made by many individuals
- * and is licensed under the MIT license. For more information, see
+ * and is licensed under the LGPL. For more information, see
  * <http://www.doctrine-project.org>.
  */
 
 namespace Doctrine\Tests;
 
-use Doctrine\Common\Cache\ArrayCache;
-use Doctrine\KeyValueStore\Configuration;
 use Doctrine\KeyValueStore\EntityManager;
-use Doctrine\KeyValueStore\Mapping;
+use Doctrine\KeyValueStore\Configuration;
+use Doctrine\KeyValueStore\Mapping\AnnotationDriver;
 use Doctrine\KeyValueStore\Storage\DoctrineCacheStorage;
+use Doctrine\Common\Cache\ArrayCache;
 
 abstract class KeyValueStoreTestCase extends \PHPUnit_Framework_TestCase
 {
-    public function createManager($storage = null, $driver = 'annotation')
+    public function createManager($storage = null)
     {
-        $cache   = new ArrayCache;
+        $cache = new ArrayCache;
         $storage = $storage ?: new DoctrineCacheStorage($cache);
 
-        switch ($driver) {
-            case 'annotation':
-                $reader   = new \Doctrine\Common\Annotations\AnnotationReader();
-                $metadata = new Mapping\AnnotationDriver($reader);
-
-                break;
-            case 'yaml':
-                $metadata = new Mapping\YamlDriver(__DIR__ . '/fixtures/yaml');
-
-                break;
-            case 'xml':
-                $metadata = new Mapping\XmlDriver(__DIR__ . '/fixtures/xml');
-
-                break;
-        }
-
+        $reader = new \Doctrine\Common\Annotations\AnnotationReader();
+        $metadata = new AnnotationDriver($reader);
         $config = new Configuration();
         $config->setMappingDriverImpl($metadata);
         $config->setMetadataCache($cache);
@@ -56,3 +41,4 @@ abstract class KeyValueStoreTestCase extends \PHPUnit_Framework_TestCase
         return new EntityManager($storage, $config);
     }
 }
+

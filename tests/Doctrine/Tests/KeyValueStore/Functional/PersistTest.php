@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -14,65 +13,47 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * This software consists of voluntary contributions made by many individuals
- * and is licensed under the MIT license. For more information, see
+ * and is licensed under the LGPL. For more information, see
  * <http://www.doctrine-project.org>.
  */
 
 namespace Doctrine\Tests\KeyValueStore\Functional;
 
-use Doctrine\KeyValueStore\Mapping\Annotations as KVS;
 use Doctrine\Tests\KeyValueStoreTestCase;
+use Doctrine\KeyValueStore\Mapping\Annotations as KVS;
 
 class PersistTest extends KeyValueStoreTestCase
 {
-    /**
-     * @dataProvider mappingDrivers
-     */
-    public function testPersistUnmappedThrowsException($mappingDriver)
+    public function testPersistUnmappedThrowsException()
     {
-        $manager = $this->createManager(null, $mappingDriver);
+        $manager = $this->createManager();
 
         $this->setExpectedException('InvalidArgumentException', 'stdClass is not a valid key-value-store entity.');
         $manager->persist(new \stdClass());
     }
 
-    /**
-     * @dataProvider mappingDrivers
-     */
-    public function testPersistWithoutIdThrowsException($mappingDriver)
+    public function testPersistWithoutIdThrowsException()
     {
-        $manager = $this->createManager(null, $mappingDriver);
+        $manager = $this->createManager();
         $persist = new PersistEntity();
 
         $this->setExpectedException('RuntimeException', 'Trying to persist entity that has no id.');
         $manager->persist($persist);
     }
 
-    /**
-     * @dataProvider mappingDrivers
-     */
-    public function testPersistKnownIdThrowsException($mappingDriver)
+    public function testPersistKnownIdThrowsException()
     {
-        $manager     = $this->createManager(null, $mappingDriver);
-        $persist     = new PersistEntity();
+        $manager = $this->createManager();
+        $persist = new PersistEntity();
         $persist->id = 1;
 
-        $persist2     = new PersistEntity();
+        $persist2 = new PersistEntity();
         $persist2->id = 1;
 
         $manager->persist($persist);
 
         $this->setExpectedException('RuntimeException', 'Object with ID already exists.');
         $manager->persist($persist2);
-    }
-
-    public function mappingDrivers()
-    {
-        return [
-            ['annotation'],
-            ['yaml'],
-            ['xml'],
-        ];
     }
 }
 

@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -20,11 +19,11 @@
 
 namespace Doctrine\KeyValueStore\Mapping;
 
-use Doctrine\Common\Persistence\Mapping\AbstractClassMetadataFactory;
-use Doctrine\Common\Persistence\Mapping\ClassMetadata;
-use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
-use Doctrine\Common\Persistence\Mapping\ReflectionService;
+use Doctrine\Persistence\Mapping\AbstractClassMetadataFactory;
+use Doctrine\Persistence\Mapping\Driver\MappingDriver;
+use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\KeyValueStore\Mapping\ClassMetadata as KeyValueMetadata;
+use Doctrine\Persistence\Mapping\ReflectionService;
 
 /**
  * Load Metadata of an entity.
@@ -46,7 +45,7 @@ class ClassMetadataFactory extends AbstractClassMetadataFactory
 
     protected function getFqcnFromAlias($namespaceAlias, $simpleClassName)
     {
-        throw new \InvalidArgumentException('aliasing is not supported.');
+        throw new \InvalidArgumentException("aliasing is not supported.");
     }
 
     protected function doLoadMetadata($class, $parent, $rootEntityFound, array $nonSuperclassParents)
@@ -55,16 +54,16 @@ class ClassMetadataFactory extends AbstractClassMetadataFactory
 
         if ($parent) {
             $class->rootClassName = $parent->name;
-            $class->storageName   = $parent->storageName;
+            $class->storageName = $parent->storageName;
         }
 
-        if (! $class->storageName) {
-            $parts              = explode('\\', $class->name);
+        if ( ! $class->storageName) {
+            $parts = explode("\\", $class->name);
             $class->storageName = end($parts);
         }
 
-        if (! $class->identifier) {
-            throw new \InvalidArgumentException('Class ' . $class->name . ' has no identifier.');
+        if (!$class->identifier) {
+            throw new \InvalidArgumentException("Class " . $class->name . " has no identifier.");
         }
     }
 
@@ -91,16 +90,17 @@ class ClassMetadataFactory extends AbstractClassMetadataFactory
         $class->reflClass = $reflService->getClass($class->name);
         if ($class->reflClass) {
             foreach ($class->reflClass->getProperties() as $property) {
-                $class->mapField(['fieldName' => $property->getName()]);
+                $class->mapField(array('fieldName' => $property->getName()));
             }
         }
     }
 
     /**
      * copied from doctrine/common - tests/Doctrine/Tests/Common/Persistence/Mapping/ClassMetadataFactoryTest.php
-     */
+     */ 
     protected function isEntity(ClassMetadata $class)
     {
         return true;
     }
 }
+

@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -18,17 +17,12 @@
  * <http://www.doctrine-project.org>.
  */
 
+
 namespace Doctrine\KeyValueStore\Storage;
 
 use Doctrine\KeyValueStore\NotFoundException;
-use Riak\Client\Command\Kv\DeleteValue;
-use Riak\Client\Command\Kv\FetchValue;
-use Riak\Client\Command\Kv\StoreValue;
-use Riak\Client\Core\Query\RiakLocation;
-use Riak\Client\Core\Query\RiakNamespace;
-use Riak\Client\Core\Query\RiakObject;
-use Riak\Client\RiakClient;
-use Riak\Client\RiakException;
+
+use Riak\Client;
 
 /**
  * @author Markus Bachmann <markus.bachmann@bachi.biz>
@@ -36,11 +30,17 @@ use Riak\Client\RiakException;
 class RiakStorage implements Storage
 {
     /**
-     * @var RiakClient
+     * @var \Riak\Client
      */
-    private $client;
+    protected $client;
 
-    public function __construct(RiakClient $riak)
+    /**
+     * Constructor
+     *
+     * @param \Riak\Client $riak
+     * @param string       $bucketName
+     */
+    public function __construct(Client $riak)
     {
         $this->client = $riak;
     }
@@ -69,25 +69,14 @@ class RiakStorage implements Storage
         return false;
     }
 
-    private function store($storageName, $key, array $data)
-    {
-        $location = $this->getRiakLocation($storageName, $key);
-
-        $riakObject = new RiakObject();
-        $riakObject->setContentType('application/json');
-        $riakObject->setValue(json_encode($data));
-
-        $store = StoreValue::builder($location, $riakObject)->build();
-
-        $this->client->execute($store);
-    }
-
     /**
      * {@inheritDoc}
      */
     public function insert($storageName, $key, array $data)
     {
-        $this->store($storageName, $key, $data);
+        $bucket = $this->client->bucket($storageName);
+        $object = $bucket->newObject($key, $data);
+        $object->store();
     }
 
     /**
@@ -95,7 +84,12 @@ class RiakStorage implements Storage
      */
     public function update($storageName, $key, array $data)
     {
-        $this->store($storageName, $key, $data);
+        $bucket = $this->client->bucket($storageName);
+        /** @var $object \Riak\Object */
+        $object = $bucket->get($key);
+
+        $object->setData($data);
+        $object->store();
     }
 
     /**
@@ -103,15 +97,17 @@ class RiakStorage implements Storage
      */
     public function delete($storageName, $key)
     {
-        $location = $this->getRiakLocation($storageName, $key);
+        $bucket = $this->client->bucket($storageName);
 
-        $delete = DeleteValue::builder($location)->build();
+        /** @var $object \Riak\Object */
+        $object = $bucket->get($key);
 
-        try {
-            $this->client->execute($delete);
-        } catch (RiakException $exception) {
-            // deletion can fail silent
+        if (!$object->exists()) {
+            // object does not exist, do nothing
+            return;
         }
+
+        $object->delete();
     }
 
     /**
@@ -119,29 +115,16 @@ class RiakStorage implements Storage
      */
     public function find($storageName, $key)
     {
-        $location = $this->getRiakLocation($storageName, $key);
+        $bucket = $this->client->bucket($storageName);
 
-        // fetch object
-        $fetch = FetchValue::builder($location)->build();
+        /** @var $object \Riak\Object */
+        $object = $bucket->get($key);
 
-        try {
-            $result = $this->client->execute($fetch);
-        } catch (RiakException $exception) {
-            throw new NotFoundException();
+        if (!$object->exists()) {
+            throw new NotFoundException;
         }
 
-        $json = (string) $result
-            ->getValue()
-            ->getValue();
-
-        return json_decode($json, true);
-    }
-
-    private function getRiakLocation($storageName, $key)
-    {
-        $namespace = new RiakNamespace('default', $storageName);
-
-        return new RiakLocation($namespace, $key);
+        return $object->getData();
     }
 
     /**

@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -30,14 +29,14 @@ use Doctrine\KeyValueStore\EntityManager;
  */
 class RangeQuery
 {
-    const CONDITION_EQ         = 'eq';
-    const CONDITION_LE         = 'le';
-    const CONDITION_LT         = 'lt';
-    const CONDITION_GT         = 'gt';
-    const CONDITION_GE         = 'ge';
-    const CONDITION_NEQ        = 'neq';
-    const CONDITION_BETWEEN    = 'between';
-    const CONDITION_STARTSWITH = 'startswith';
+    const CONDITION_EQ          = 'eq';
+    const CONDITION_LE          = 'le';
+    const CONDITION_LT          = 'lt';
+    const CONDITION_GT          = 'gt';
+    const CONDITION_GE          = 'ge';
+    const CONDITION_NEQ         = 'neq';
+    const CONDITION_BETWEEN     = 'between';
+    const CONDITION_STARTSWITH  = 'startswith';
 
     /**
      * @param string
@@ -52,7 +51,7 @@ class RangeQuery
     /**
      * @var array
      */
-    protected $conditions = [];
+    protected $conditions = array();
 
     /**
      * Limit result to only a set of entities.
@@ -66,7 +65,7 @@ class RangeQuery
      *
      * @var array
      */
-    protected $hints = [];
+    protected $hints = array();
 
     /**
      * @var EntityManager
@@ -75,8 +74,8 @@ class RangeQuery
 
     public function __construct(EntityManager $em, $className, $partitionKey)
     {
-        $this->em           = $em;
-        $this->className    = $className;
+        $this->em = $em;
+        $this->className = $className;
         $this->partitionKey = $partitionKey;
     }
 
@@ -115,12 +114,11 @@ class RangeQuery
      * Add range equals condition to range key.
      *
      * @param mixed $value
-     *
      * @return RangeQuery
      */
     public function rangeEquals($value)
     {
-        $this->conditions[] = [self::CONDITION_EQ, $value];
+        $this->conditions[] = array(self::CONDITION_EQ, $value);
         return $this;
     }
 
@@ -128,12 +126,11 @@ class RangeQuery
      * Add range not equals condition to range key.
      *
      * @param mixed $value
-     *
      * @return RangeQuery
      */
     public function rangeNotEquals($value)
     {
-        $this->conditions[] = [self::CONDITION_NEQ, $value];
+        $this->conditions[] = array(self::CONDITION_NEQ, $value);
         return $this;
     }
 
@@ -141,12 +138,11 @@ class RangeQuery
      * Add range less than condition to range key.
      *
      * @param mixed $value
-     *
      * @return RangeQuery
      */
     public function rangeLessThan($value)
     {
-        $this->conditions[] = [self::CONDITION_LT, $value];
+        $this->conditions[] = array(self::CONDITION_LT, $value);
         return $this;
     }
 
@@ -154,12 +150,11 @@ class RangeQuery
      * Add range less than equals condition to range key.
      *
      * @param mixed $value
-     *
      * @return RangeQuery
      */
     public function rangeLessThanEquals($value)
     {
-        $this->conditions[] = [self::CONDITION_LE, $value];
+        $this->conditions[] = array(self::CONDITION_LE, $value);
         return $this;
     }
 
@@ -167,12 +162,11 @@ class RangeQuery
      * Add range greater than condition to range key.
      *
      * @param mixed $value
-     *
      * @return RangeQuery
      */
     public function rangeGreaterThan($value)
     {
-        $this->conditions[] = [self::CONDITION_GT, $value];
+        $this->conditions[] = array(self::CONDITION_GT, $value);
         return $this;
     }
 
@@ -180,12 +174,11 @@ class RangeQuery
      * Add range greater than equals condition to range key.
      *
      * @param mixed $value
-     *
      * @return RangeQuery
      */
     public function rangeGreaterThanEquals($value)
     {
-        $this->conditions[] = [self::CONDITION_GE, $value];
+        $this->conditions[] = array(self::CONDITION_GE, $value);
         return $this;
     }
 
@@ -208,23 +201,21 @@ class RangeQuery
     {
         $storage = $this->em->unwrap();
 
-        if (! $storage instanceof RangeQueryStorage) {
-            throw new \RuntimeException(
-                'The storage backend ' . $storage->getName() . ' does not support range queries.'
-            );
+        if ( ! ($storage instanceof RangeQueryStorage)) {
+            throw new \RuntimeException("The storage backend " . $this->storage->getName() . " does not support range queries.");
         }
 
         $uow   = $this->em->getUnitOfWork();
         $class = $this->em->getClassMetadata($this->className);
 
-        $rowHydration = function ($row) use ($uow, $class) {
-            $key = [];
+        return $storage->executeRangeQuery($this, $class->storageName, $class->identifier, function ($row) use($uow, $class) {
+            $key = array();
             foreach ($class->identifier as $id) {
                 $key[$id] = $row[$id];
             }
 
             return $uow->createEntity($class, $key, $row);
-        };
-        return $storage->executeRangeQuery($this, $class->storageName, $class->identifier, $rowHydration);
+        });
     }
 }
+

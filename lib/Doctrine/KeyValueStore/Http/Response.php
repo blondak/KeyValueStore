@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -17,15 +16,12 @@
  * and is licensed under the MIT license. For more information, see
  * <http://www.doctrine-project.org>.
  */
-
 namespace Doctrine\KeyValueStore\Http;
 
 /**
  * HTTP Response
  *
  * @author Benjamin Eberlei <kontakt@beberlei.de>
- *
- * @deprecated This class is deprecated and will be removed in 2.0.
  */
 class Response
 {
@@ -33,12 +29,12 @@ class Response
 
     private $body;
 
-    private $headers = [];
+    private $headers = array();
 
     public function __construct($code, $body, array $headers)
     {
-        $this->code    = $code;
-        $this->body    = $body;
+        $this->code = $code;
+        $this->body = $body;
         $this->headers = $headers;
     }
 
@@ -66,14 +62,14 @@ class Response
      * Get HTTP Response header
      *
      * @param string $name
-     *
      * @return null|string|array
      */
     public function getHeader($name)
     {
-        if (! isset($this->headers[$name])) {
-            return;
+        if ( ! isset($this->headers[$name])) {
+            return null;
         }
         return $this->headers[$name];
     }
 }
+

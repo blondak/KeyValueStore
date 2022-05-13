@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -20,9 +19,6 @@
 
 namespace Doctrine\KeyValueStore\Storage\WindowsAzureTable;
 
-/**
- * @deprecated This class is deprecated and will be removed in 2.0.
- */
 class SharedKeyLiteAuthorization implements AuthorizationSchema
 {
     /**
@@ -37,7 +33,7 @@ class SharedKeyLiteAuthorization implements AuthorizationSchema
     public function __construct($accountName, $accountKey)
     {
         $this->accountName = $accountName;
-        $this->accountKey  = base64_decode($accountKey);
+        $this->accountKey = base64_decode($accountKey);
     }
 
     /**
@@ -46,10 +42,10 @@ class SharedKeyLiteAuthorization implements AuthorizationSchema
      */
     public function signRequest($method, $path, $queryString, $body, array $headers)
     {
-        $canonicalResource = '/' . $this->accountName . $path;
-        $stringToSign      = $headers['x-ms-date'] . "\n" .
+        $canonicalResource = "/" . $this->accountName . $path;
+        $stringToSign = $headers['x-ms-date'] . "\n" .
                         $canonicalResource;
-        return 'Authorization: SharedKeyLite ' . $this->accountName . ':' .
-            base64_encode(hash_hmac('sha256', $stringToSign, $this->accountKey, true));
+        return "Authorization: SharedKeyLite " . $this->accountName . ":" . base64_encode(hash_hmac('sha256', $stringToSign, $this->accountKey, true));
     }
 }
+

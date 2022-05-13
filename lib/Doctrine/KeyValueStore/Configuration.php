@@ -1,5 +1,4 @@
 <?php
-
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -20,9 +19,9 @@
 
 namespace Doctrine\KeyValueStore;
 
-use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\Common\Cache\Cache;
-use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
+use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\KeyValueStore\Id\IdConverterStrategy;
 use Doctrine\KeyValueStore\Id\NullIdConverter;
 
@@ -45,7 +44,7 @@ class Configuration
      */
     public function getMappingDriverImpl()
     {
-        if (! isset($this->config['mappingDriver'])) {
+        if ( ! isset($this->config['mappingDriver'])) {
             throw KeyValueStoreException::mappingDriverMissing();
         }
 
@@ -56,7 +55,6 @@ class Configuration
      * Set the mapping driver implementation.
      *
      * @param \Doctrine\Common\Persistence\Mapping\Driver\MappingDriver $driver
-     *
      * @return \Doctrine\KeyValueStore\Configuration
      */
     public function setMappingDriverImpl(MappingDriver $driver)
@@ -69,7 +67,6 @@ class Configuration
      * Set the Metadata Mapping cache used with this configuration.
      *
      * @param \Doctrine\Common\Cache\Cache $cache
-     *
      * @return \Doctrine\KeyValueStore\Configuration
      */
     public function setMetadataCache(Cache $cache)
@@ -85,7 +82,7 @@ class Configuration
      */
     public function getMetadataCache()
     {
-        if (! isset($this->config['metadataCache'])) {
+        if ( ! isset($this->config['metadataCache'])) {
             $this->config['metadataCache'] = new ArrayCache();
         }
 
@@ -96,7 +93,6 @@ class Configuration
      * Set the ID Converter Strategy
      *
      * @param \Doctrine\KeyValueStore\Id\IdConverterStrategy
-     *
      * @return \Doctrine\KeyValueStore\Configuration
      */
     public function setIdConverterStrategy(IdConverterStrategy $strategy)
@@ -112,10 +108,11 @@ class Configuration
      */
     public function getIdConverterStrategy()
     {
-        if (! isset($this->config['idConverter'])) {
+        if ( ! isset($this->config['idConverter'])) {
             $this->config['idConverter'] = new NullIdConverter();
         }
 
         return $this->config['idConverter'];
     }
 }
+

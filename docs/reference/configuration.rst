@@ -12,11 +12,10 @@ Mapping Configuration
 .. code-block:: php
 
     <?php
-
-    use Doctrine\Common\Annotations\AnnotationReader;
-    use Doctrine\Common\Cache\ArrayCache;
     use Doctrine\KeyValueStore\Configuration;
     use Doctrine\KeyValueStore\Mapping\AnnotationDriver;
+    use Doctrine\Common\Cache\ArrayCache;
+    use Doctrine\Common\Annotations\AnnotationReader;
 
     // 1. create Configuration instance
     $config = new Configuration();
@@ -52,39 +51,23 @@ database backends, you have to configure the actual storage you want to use.
 This configuration is obviously specific to all the different storage drivers.
 So far the following drivers exist (and are documented here):
 
-* PHP Array
 * Doctrine Cache Backend
 * SQL Backend with Doctrine DBAL
 * Microsoft Windows Azure Table
 * Couchbase
-* CouchDB
-* DynamoDB
 * MongoDB
 * Riak
 
 Also all those storage backends obviously have different dependencies in terms
 of PHP libraries or PHP PECL extensions.
 
-PHP Array
----------
-
-PHP array is used mainly for development and teesting purposes.
-
-.. code-block:: php
-
-   <?php
-
-   use Doctrine\KeyValueStore\Storage\ArrayStorage;
-
-   $storage = new ArrayStorage();
-
 Doctrine Cache Backend
-----------------------
+^^^^^^^^^^^^^^^^^^^^^^
 
 The Doctrine Cache Backend uses the `Caching Framework
 <https://github.com/doctrine/cache>`_ from Doctrine as a backend. Depending on
 the cache driver you get a persistent or in-memory key value store with this
-solution. See the `Doctrine Common documentation
+solution. See the `Doctrine Common documentation 
 <http://docs.doctrine-project.org/projects/doctrine-common/en/latest/reference/caching.html>`_
 for more details about the different supported drivers.
 
@@ -93,7 +76,6 @@ Here is an example of configurating the Cache Storage using Redis:
 .. code-block:: php
 
    <?php
-
    use Doctrine\Common\Cache\RedisCache;
    use Doctrine\KeyValueStore\Storage\DoctrineCacheStorage;
    use Redis;
@@ -104,7 +86,7 @@ Here is an example of configurating the Cache Storage using Redis:
    $storage = new DoctrineCacheStorage($cache);
 
 Doctrine DBAL Backend
----------------------
+^^^^^^^^^^^^^^^^^^^^^
 
 You can use a relational database as backend. It uses a very simple
 table as storage with one primary key and a blob field that stores
@@ -113,9 +95,8 @@ the properties.
 .. code-block:: php
 
     <?php
-
-    use Doctrine\DBAL\DriverManager;
     use Doctrine\KeyValueStore\Storage\DBALStorage;
+    use Doctrine\DBAL\DriverManager;
 
     $tableName = 'storage';
     $keyColumn = 'id';
@@ -127,7 +108,7 @@ the properties.
     $storage = new DBALStorage($conn, $tableName, $keyColumn, $dataColumn);
 
 Microsoft Windows Azure Table
------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Microsoft offers a NoSQL solution as part of their `Windows Azure
 <http://www.windowsazure.com/en-us/>`_ service. You can use that
@@ -136,116 +117,26 @@ as a storage layer through the Windows Azure PHP SDK:
 .. code-block:: php
 
    <?php
-
    use Doctrine\KeyValueStore\Storage\AzureSdkTableStorage;
    use WindowsAzure\Common\ServicesBuilder;
 
-   $connectionString = ''; // Windows Azure Connection string
+   $connectionString = ""; // Windows Azure Connection string
    $builder = ServicesBuilder::getInstance();
    $client = $builder->createTableService($connectionString);
 
    $storage = new AzureSdkTableStorage($client);
 
-Cassandra
----------
-
-Cassandra is supported through the `PECL extension <https://pecl.php.net/package/cassandra>`_
-and the `DataStax PHP driver <https://github.com/datastax/php-driver>`_:
-
-.. code-block:: php
-
-    <?php
-
-    use Cassandra;
-    use Cassandra\SimpleStatement;
-    use Doctrine\KeyValueStore\Storage\CassandraStorage;
-
-    $cluster = Cassandra::cluster()->build();
-    $session = $cluster->connect();
-    $session->execute(new SimpleStatement('USE doctrine'));
-
-    $storage = new CassandraStorage($session);
-
 Couchbase
----------
+^^^^^^^^^
 
-Until the version 1.2 also Couchbase is supported:
-
-.. code-block:: php
-
-    <?php
-
-    use Doctrine\KeyValueStore\Storage\CouchbaseStorage;
-
-    $conn = new Couchbase(/* connection parameters */);
-
-    $storage = new CouchbaseStorage($conn);
-
-CouchDB
--------
-
-CouchDB storage setup based on `doctrine/couchdb-client <https://github.com/doctrine/couchdb-client>`_:
-
-.. code-block:: php
-
-    <?php
-
-    use Doctrine\CouchDB\CouchDBClient;
-    use Doctrine\KeyValueStore\Storage\CouchDbStorage;
-
-    $client = CouchDBClient::create(array(
-        'dbname' => 'doctrine_example',
-    ));
-
-    $storage = new CouchDbStorage($client);
-
-DynamoDb
----------
-
-DynamoDb is supported through the `AWS SDK for PHP <https://aws.amazon.com/sdk-for-php/>`_
-Create your tables via the AWS DynamoDb console or using the `PHP based API <http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/LowLevelPHPTableOperationsExample.html>`_
-See the `AWS docs <http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/UsingPHP.html#PHPSDKCredentialsSet>`_ for more information on configuring credentials for the client.
-
-.. code-block:: php
-
-    <?php
-
-    $client = DynamoDbClient::factory([...])
-
-    $storage = new DynamoDbStorage($client);
+To be written
 
 MongoDB
--------
+^^^^^^^
 
-MongoDB is based on `mongodb/mongodb <https://github.com/mongodb/mongo-php-library>`_:
-MongoDB support is provided using a `Database <https://docs.mongodb.com/php-library/current/reference/class/MongoDBDatabase/>`_
-instance.
-
-.. code-block:: php
-
-    <?php
-
-    use MongoDB\Client;
-    use Doctrine\KeyValueStore\Storage\MongoDbStorage;
-
-    $client = new Client(/* connection parameters and options */);
-
-    $storage = new MongoDbStorage($client->your_database);
+To be written
 
 Riak
-----
+^^^^
 
-Riak support is provided through the library `php-riak/riak-client <https://github.com/php-riak/riak-client>`_ :
-
-.. code-block:: php
-
-    <?php
-
-    use Doctrine\KeyValueStore\Storage\RiakStorage;
-    use Riak\Client\RiakClientBuilder;
-
-    $conn = (new RiakClientBuilder())
-        ->withNodeUri(/* connection DNS */)
-        ->build();
-
-    $storage = new RiakStorage($conn);
+to be written
