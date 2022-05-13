@@ -1,5 +1,5 @@
 {
-    "name": "doctrine/key-value-store",
+    "name": "flexydigital/key-value-store",
     "require": {
         "php": "^5.5|^7.0|^8.0",
         "doctrine/common": "*"
