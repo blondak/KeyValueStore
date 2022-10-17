@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -49,7 +50,7 @@ class ClassMetadata implements BaseClassMetadata
 
     public function mapField($mapping)
     {
-        if ( ! isset($this->transientFields[$mapping['fieldName']])) {
+        if (! isset($this->transientFields[$mapping['fieldName']])) {
             $this->fields[$mapping['fieldName']] = $mapping;
         }
     }
@@ -97,7 +98,9 @@ class ClassMetadata implements BaseClassMetadata
      *
      * @return string
      */
-    function getName(){}
+    function getName()
+    {
+    }
 
     /**
      * Gets the mapped identifier field name.
@@ -106,14 +109,18 @@ class ClassMetadata implements BaseClassMetadata
      *
      * @return array
      */
-    function getIdentifier(){}
+    function getIdentifier()
+    {
+    }
 
     /**
      * Gets the ReflectionClass instance for this mapped class.
      *
-     * @return ReflectionClass
+     * @return \ReflectionClass
      */
-    function getReflectionClass(){}
+    function getReflectionClass()
+    {
+    }
 
     /**
      * Checks if the given field name is a mapped identifier for this class.
@@ -121,7 +128,9 @@ class ClassMetadata implements BaseClassMetadata
      * @param string $fieldName
      * @return boolean
      */
-    function isIdentifier($fieldName){}
+    function isIdentifier($fieldName)
+    {
+    }
 
     /**
      * Checks if the given field is a mapped property for this class.
@@ -129,7 +138,9 @@ class ClassMetadata implements BaseClassMetadata
      * @param string $fieldName
      * @return boolean
      */
-    function hasField($fieldName){}
+    function hasField($fieldName)
+    {
+    }
 
     /**
      * Checks if the given field is a mapped association for this class.
@@ -137,7 +148,9 @@ class ClassMetadata implements BaseClassMetadata
      * @param string $fieldName
      * @return boolean
      */
-    function hasAssociation($fieldName){}
+    function hasAssociation($fieldName)
+    {
+    }
 
     /**
      * Checks if the given field is a mapped single valued association for this class.
@@ -145,7 +158,9 @@ class ClassMetadata implements BaseClassMetadata
      * @param string $fieldName
      * @return boolean
      */
-    function isSingleValuedAssociation($fieldName){}
+    function isSingleValuedAssociation($fieldName)
+    {
+    }
 
     /**
      * Checks if the given field is a mapped collection valued association for this class.
@@ -153,7 +168,9 @@ class ClassMetadata implements BaseClassMetadata
      * @param string $fieldName
      * @return boolean
      */
-    function isCollectionValuedAssociation($fieldName){}
+    function isCollectionValuedAssociation($fieldName)
+    {
+    }
 
     /**
      * A numerically indexed list of field names of this persistent class.
@@ -162,14 +179,18 @@ class ClassMetadata implements BaseClassMetadata
      *
      * @return array
      */
-    function getFieldNames(){}
+    function getFieldNames()
+    {
+    }
 
     /**
      * Returns an array of identifier field names numerically indexed.
      *
      * @return array
      */
-    function getIdentifierFieldNames(){}
+    function getIdentifierFieldNames()
+    {
+    }
 
     /**
      * A numerically indexed list of association names of this persistent class.
@@ -178,7 +199,9 @@ class ClassMetadata implements BaseClassMetadata
      *
      * @return array
      */
-    function getAssociationNames(){}
+    function getAssociationNames()
+    {
+    }
 
     /**
      * Returns a type name of this field.
@@ -189,7 +212,9 @@ class ClassMetadata implements BaseClassMetadata
      * @param string $fieldName
      * @return string
      */
-    function getTypeOfField($fieldName){}
+    function getTypeOfField($fieldName)
+    {
+    }
 
     /**
      * Returns the target class name of the given association.
@@ -197,7 +222,9 @@ class ClassMetadata implements BaseClassMetadata
      * @param string $assocName
      * @return string
      */
-    function getAssociationTargetClass($assocName){}
+    function getAssociationTargetClass($assocName)
+    {
+    }
 
     /**
      * Checks if the association is the inverse side of a bidirectional association
@@ -205,7 +232,9 @@ class ClassMetadata implements BaseClassMetadata
      * @param string $assocName
      * @return boolean
      */
-    function isAssociationInverseSide($assocName){}
+    function isAssociationInverseSide($assocName)
+    {
+    }
 
     /**
      * Returns the target field of the owning side of the association
@@ -213,6 +242,7 @@ class ClassMetadata implements BaseClassMetadata
      * @param string $assocName
      * @return string
      */
-    function getAssociationMappedByTargetField($assocName){}
+    function getAssociationMappedByTargetField($assocName)
+    {
+    }
 }
-

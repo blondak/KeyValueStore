@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -66,10 +67,9 @@ class Response
      */
     public function getHeader($name)
     {
-        if ( ! isset($this->headers[$name])) {
+        if (! isset($this->headers[$name])) {
             return null;
         }
         return $this->headers[$name];
     }
 }
-

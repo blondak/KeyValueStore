@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -21,9 +22,8 @@ namespace Doctrine\KeyValueStore;
 
 class KeyValueStoreException extends \Exception
 {
-    static public function mappingDriverMissing()
+    public static function mappingDriverMissing()
     {
         return new self("No mapping driver was assigned to the configuration. Use \$config->setMappingDriverImpl()");
     }
 }
-

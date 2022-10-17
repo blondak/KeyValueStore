@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -58,7 +59,7 @@ class AnnotationDriver implements MappingDriver
             $transientAnnot = $this->reader->getPropertyAnnotation($property, 'Doctrine\KeyValueStore\Mapping\Annotations\Transient');
             if ($idAnnot) {
                 $metadata->mapIdentifier($property->getName());
-            } else if ($transientAnnot) {
+            } elseif ($transientAnnot) {
                 $metadata->skipTransientField($property->getName());
             } else {
                 $metadata->mapField(array('fieldName' => $property->getName()));
@@ -88,4 +89,3 @@ class AnnotationDriver implements MappingDriver
         return false;
     }
 }
-

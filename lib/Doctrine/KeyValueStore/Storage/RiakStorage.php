@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -21,7 +22,6 @@
 namespace Doctrine\KeyValueStore\Storage;
 
 use Doctrine\KeyValueStore\NotFoundException;
-
 use Riak\Client;
 
 /**
@@ -121,7 +121,7 @@ class RiakStorage implements Storage
         $object = $bucket->get($key);
 
         if (!$object->exists()) {
-            throw new NotFoundException;
+            throw new NotFoundException();
         }
 
         return $object->getData();

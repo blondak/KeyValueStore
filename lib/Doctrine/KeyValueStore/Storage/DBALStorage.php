@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -83,7 +84,7 @@ class DBALStorage implements Storage
                 $this->keyColumn => $key,
                 $this->dataColumn => serialize($data)
             ));
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
         }
     }
 
@@ -102,7 +103,7 @@ class DBALStorage implements Storage
             ), array(
                 $this->keyColumn => $key
             ));
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
         }
     }
 
@@ -116,7 +117,7 @@ class DBALStorage implements Storage
     {
         try {
             $this->conn->delete($this->table, array($this->keyColumn => $key));
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
         }
     }
 
@@ -156,4 +157,3 @@ class DBALStorage implements Storage
         return 'dbal';
     }
 }
-

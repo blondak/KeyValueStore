@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Doctrine Key Value Store
  *
@@ -17,6 +18,4 @@ use Doctrine\KeyValueStore\Storage\StorageException;
 
 class HttpStorageException extends StorageException
 {
-    
 }
-

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -99,8 +100,8 @@ class UnitOfWork
 
     public function createEntity($class, $id, $data)
     {
-        if ( isset($data['php_class'])) {
-            if ( $data['php_class'] !== $class->name && ! is_subclass_of($data['php_class'], $class->name)) {
+        if (isset($data['php_class'])) {
+            if ($data['php_class'] !== $class->name && ! is_subclass_of($data['php_class'], $class->name)) {
                 throw new \RuntimeException("Row is of class '" . $data['php_class'] . "' which is not a subtype of expected " . $class->name);
             }
             $class = $this->cmf->getMetadataFor($data['php_class']);
@@ -108,7 +109,7 @@ class UnitOfWork
         unset($data['php_class']);
 
         $object = $this->tryGetById($class->name, $id);
-        if ( $object) {
+        if ($object) {
             return $object;
         }
 
@@ -140,12 +141,12 @@ class UnitOfWork
         $originalData = $this->originalData[spl_object_hash($object)];
 
         foreach ($snapshot as $field => $value) {
-            if ( ! isset($originalData[$field]) || $originalData[$field] !== $value) {
+            if (! isset($originalData[$field]) || $originalData[$field] !== $value) {
                 $changeSet[$field] = $value;
             }
         }
 
-        if ( $changeSet && ! $this->storageDriver->supportsPartialUpdates()) {
+        if ($changeSet && ! $this->storageDriver->supportsPartialUpdates()) {
             $changeSet = array_merge($originalData, $changeSet);
         }
         return $changeSet;
@@ -156,13 +157,13 @@ class UnitOfWork
         $data = array();
 
         foreach ($class->reflFields as $fieldName => $reflProperty) {
-            if ( ! isset( $class->fields[$fieldName]['id'])) {
+            if (! isset($class->fields[$fieldName]['id'])) {
                 $data[$fieldName] = $reflProperty->getValue($object);
             }
         }
 
         foreach (get_object_vars($object) as $property => $value) {
-            if ( ! isset($data[$property])) {
+            if (! isset($data[$property])) {
                 $data[$property] = $value;
             }
         }
@@ -180,7 +181,7 @@ class UnitOfWork
         $class = $this->cmf->getMetadataFor(get_class($object));
         $id    = $this->idHandler->getIdentifier($class, $object);
 
-        if ( ! $id) {
+        if (! $id) {
             throw new \RuntimeException("Trying to persist entity that has no id.");
         }
 
@@ -209,7 +210,7 @@ class UnitOfWork
             foreach ($entities as $object) {
                 $hash = spl_object_hash($object);
 
-                if ( isset($this->scheduledInsertions[$hash])) {
+                if (isset($this->scheduledInsertions[$hash])) {
                     continue;
                 }
 
@@ -237,7 +238,7 @@ class UnitOfWork
             $id    = $this->idHandler->getIdentifier($class, $object);
             $id    = $this->idConverter->serialize($class, $id);
 
-            if ( ! $id) {
+            if (! $id) {
                 throw new \RuntimeException("Trying to persist entity that has no id.");
             }
 
@@ -288,4 +289,3 @@ class UnitOfWork
         $this->identityMap         = array();
     }
 }
-

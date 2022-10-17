@@ -116,7 +116,7 @@ final class CouchDbStorage implements Storage
     /**
      * @param string       $storageName
      * @param array|string $key
-     * 
+     *
      * @return string
      */
     private function flattenKey($storageName, $key)

@@ -1,4 +1,5 @@
 <?php
+
 /*
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -153,7 +154,7 @@ class DynamoDbStorage implements Storage
     {
         return 'dynamodb';
     }
-    
+
 
     /**
      * @param string $tableName
@@ -164,7 +165,7 @@ class DynamoDbStorage implements Storage
             $this->client->describeTable(array(
                 'TableName' => $tableName,
             ));
-        } catch(ResourceNotFoundException $e) {
+        } catch (ResourceNotFoundException $e) {
             $this->client->createTable(array(
                 'AttributeDefinitions' => array(
                     array(
@@ -188,8 +189,8 @@ class DynamoDbStorage implements Storage
     }
 
     /**
-     * @param string $key 
-     * @param array $data 
+     * @param string $key
+     * @param array $data
      */
     protected function prepareData($key, &$data)
     {

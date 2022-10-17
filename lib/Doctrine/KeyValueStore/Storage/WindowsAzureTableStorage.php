@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -151,11 +152,9 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
         $response = $this->request('POST', $url, $xml, $headers);
 
         if ($response->getStatusCode() == 404) {
-
             $this->createTable($tableName);
             $this->insert($storageName, $key, $data);
-        } else if ($response->getStatusCode() >= 400) {
-
+        } elseif ($response->getStatusCode() >= 400) {
             $this->convertResponseToException($response);
         }
     }
@@ -293,14 +292,14 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
             $name = substr($property->tagName, 2);
             if ($name == "PartitionKey") {
                 $name = $partitionKey;
-            } else if ($name == "RowKey") {
+            } elseif ($name == "RowKey") {
                 $name = $rowKey;
             }
 
             $value = $property->nodeValue;
             if ($property->hasAttributeNS(self::METADATA_NS, 'null')) {
                 $value = null;
-            } else if ($property->hasAttributeNS(self::METADATA_NS, 'type')) {
+            } elseif ($property->hasAttributeNS(self::METADATA_NS, 'type')) {
                 $type = $property->getAttributeNS(self::METADATA_NS, 'type');
                 switch ($type) {
                     case self::TYPE_BOOLEAN:
@@ -330,7 +329,7 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
 
         $filters = array("PartitionKey eq " . $this->quoteFilterValue($query->getPartitionKey()));
         foreach ($query->getConditions() as $condition) {
-            if ( ! in_array($condition[0], array('eq', 'neq', 'le', 'lt', 'ge', 'gt'))) {
+            if (! in_array($condition[0], array('eq', 'neq', 'le', 'lt', 'ge', 'gt'))) {
                 throw new \InvalidArgumentException("Windows Azure Table only supports eq, neq, le, lt, ge, gt as conditions.");
             }
             $filters[] = $key[1] . " " . $condition[0] . " " . $this->quoteFilterValue($condition[1]);
@@ -457,7 +456,7 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
             $xml,
             $headers
         );
-        $authorizationParts = explode(":" , $authorizationHeader, 2);
+        $authorizationParts = explode(":", $authorizationHeader, 2);
         $headers[$authorizationParts[0]] = ltrim($authorizationParts[1]);
         return $this->client->request($method, $url, $xml, $headers);
     }
@@ -465,7 +464,7 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
     private function serializeProperties($propertiesNode, array $key, array $data)
     {
         foreach ($data as $propertyName => $propertyValue) {
-            if ( isset($key[$propertyName])) {
+            if (isset($key[$propertyName])) {
                 continue;
             }
 
@@ -481,4 +480,3 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
         }
     }
 }
-

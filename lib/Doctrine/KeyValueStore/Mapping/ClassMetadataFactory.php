@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -57,7 +58,7 @@ class ClassMetadataFactory extends AbstractClassMetadataFactory
             $class->storageName = $parent->storageName;
         }
 
-        if ( ! $class->storageName) {
+        if (! $class->storageName) {
             $parts = explode("\\", $class->name);
             $class->storageName = end($parts);
         }
@@ -97,10 +98,9 @@ class ClassMetadataFactory extends AbstractClassMetadataFactory
 
     /**
      * copied from doctrine/common - tests/Doctrine/Tests/Common/Persistence/Mapping/ClassMetadataFactoryTest.php
-     */ 
+     */
     protected function isEntity(ClassMetadata $class)
     {
         return true;
     }
 }
-

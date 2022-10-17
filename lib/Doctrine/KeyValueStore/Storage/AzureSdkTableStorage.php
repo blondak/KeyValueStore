@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -23,7 +24,6 @@ use WindowsAzure\Table\TableRestProxy;
 use WindowsAzure\Table\Models\Entity;
 use WindowsAzure\Table\Models\EdmType;
 use WindowsAzure\Common\ServiceException;
-
 use Doctrine\KeyValueStore\NotFoundException;
 use Doctrine\KeyValueStore\Query\RangeQuery;
 use Doctrine\KeyValueStore\Query\RangeQueryStorage;
@@ -78,13 +78,14 @@ class AzureSdkTableStorage implements Storage, RangeQueryStorage
 
         try {
             $this->client->insertEntity($storageName, $entity);
-        } catch(ServiceException $e){
+        } catch (ServiceException $e) {
             if ($e->getCode() == 404) {
                 $this->client->createTable($storageName);
             } else {
                 throw new StorageException(
                     "Could not save entity in table, WindowsAzure SDK client reported error: " . $e->getMessage(),
-                    $e->getCode(), $e
+                    $e->getCode(),
+                    $e
                 );
             }
         }
@@ -99,10 +100,11 @@ class AzureSdkTableStorage implements Storage, RangeQueryStorage
 
         try {
             $this->client->updateEntity($storageName, $entity);
-        } catch(ServiceException $e){
+        } catch (ServiceException $e) {
             throw new StorageException(
                 "Could not update entity in table, WindowsAzure SDK client reported error: " . $e->getMessage(),
-                $e->getCode(), $e
+                $e->getCode(),
+                $e
             );
         }
     }
@@ -116,10 +118,11 @@ class AzureSdkTableStorage implements Storage, RangeQueryStorage
 
         try {
             $this->client->deleteEntity($storageName, $partitonKey, $rowKey);
-        } catch(ServiceException $e) {
+        } catch (ServiceException $e) {
             throw new StorageException(
                 "Could not delete entity in table, WindowsAzure SDK client reported error: " . $e->getMessage(),
-                $e->getCode(), $e
+                $e->getCode(),
+                $e
             );
         }
     }
@@ -133,13 +136,14 @@ class AzureSdkTableStorage implements Storage, RangeQueryStorage
 
         try {
             $result     = $this->client->getEntity($storageName, $partitonKey, $rowKey);
-        } catch(ServiceException $e) {
+        } catch (ServiceException $e) {
             if ($e->getCode() === 404) {
                 throw new NotFoundException();
             } else {
                 throw new StorageException(
                     "Could not find entity in table, WindowsAzure SDK client reported error: " . $e->getMessage(),
-                    $e->getCode(), $e
+                    $e->getCode(),
+                    $e
                 );
             }
         }
@@ -154,7 +158,7 @@ class AzureSdkTableStorage implements Storage, RangeQueryStorage
         foreach ($entity->getProperties() as $name => $property) {
             if ($name === 'PartitionKey') {
                 $name = 'dist';
-            } else if ($name === 'RowKey') {
+            } elseif ($name === 'RowKey') {
                 $name = 'range';
             }
 
@@ -180,7 +184,7 @@ class AzureSdkTableStorage implements Storage, RangeQueryStorage
         $filters = array("PartitionKey eq " . $this->quoteFilterValue($query->getPartitionKey()));
 
         foreach ($query->getConditions() as $condition) {
-            if ( ! in_array($condition[0], array('eq', 'neq', 'le', 'lt', 'ge', 'gt'))) {
+            if (! in_array($condition[0], array('eq', 'neq', 'le', 'lt', 'ge', 'gt'))) {
                 throw new \InvalidArgumentException("Windows Azure Table only supports eq, neq, le, lt, ge, gt as conditions.");
             }
             $filters[] = "RowKey " . $condition[0] . " " . $this->quoteFilterValue($condition[1]);
@@ -234,11 +238,11 @@ class AzureSdkTableStorage implements Storage, RangeQueryStorage
     {
         if ($propertyValue instanceof \DateTime) {
             return EdmType::DATETIME;
-        } else if (is_float($propertyValue)) {
+        } elseif (is_float($propertyValue)) {
             return EdmType::DOUBLE;
-        } else if (is_int($propertyValue)) {
+        } elseif (is_int($propertyValue)) {
             return EdmType::INT32;
-        } else if (is_bool($propertyValue)) {
+        } elseif (is_bool($propertyValue)) {
             return EdmType::BOOLEAN;
         }
 

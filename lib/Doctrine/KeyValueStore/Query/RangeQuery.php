@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -201,14 +202,14 @@ class RangeQuery
     {
         $storage = $this->em->unwrap();
 
-        if ( ! ($storage instanceof RangeQueryStorage)) {
+        if (! ($storage instanceof RangeQueryStorage)) {
             throw new \RuntimeException("The storage backend " . $this->storage->getName() . " does not support range queries.");
         }
 
         $uow   = $this->em->getUnitOfWork();
         $class = $this->em->getClassMetadata($this->className);
 
-        return $storage->executeRangeQuery($this, $class->storageName, $class->identifier, function ($row) use($uow, $class) {
+        return $storage->executeRangeQuery($this, $class->storageName, $class->identifier, function ($row) use ($uow, $class) {
             $key = array();
             foreach ($class->identifier as $id) {
                 $key[$id] = $row[$id];
@@ -218,4 +219,3 @@ class RangeQuery
         });
     }
 }
-

@@ -1,4 +1,5 @@
 <?php
+
 /*
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -114,14 +115,14 @@ class SimpleDbStorage implements Storage
         $iterator = $this->client->select(array(
             'SelectExpression' => $select,
         ));
-        
+
         $results = $iterator->get('Items');
 
         if (count($results)) {
             $result = array_shift($results);
 
             $data = array('id' => $result['Name']);
-        
+
             foreach ($result['Attributes'] as $attribute) {
                 $data[$attribute['Name']] = $attribute['Value'];
             }
@@ -161,8 +162,8 @@ class SimpleDbStorage implements Storage
     }
 
     /**
-     * @param string $key 
-     * @param array $data 
+     * @param string $key
+     * @param array $data
      */
     protected function makeAttributes($data)
     {
