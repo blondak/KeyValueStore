@@ -23,6 +23,7 @@ namespace Doctrine\KeyValueStore;
 use Doctrine\KeyValueStore\Storage\Storage;
 use Doctrine\KeyValueStore\Mapping\ClassMetadataFactory;
 use Doctrine\KeyValueStore\Query\RangeQuery;
+use Psr\Cache\CacheItemPoolInterface;
 
 /**
  * EntityManager for KeyValue stored objects.
@@ -47,10 +48,16 @@ class EntityManager
      * @param Storage $storageDriver
      * @param Configuration $config
      */
-    public function __construct(Storage $storageDriver, Configuration $config)
+    public function __construct(
+        Storage $storageDriver,
+        Configuration $config,
+        ?CacheItemPoolInterface $cacheItemPool = null
+    )
     {
         $cmf = new ClassMetadataFactory($config->getMappingDriverImpl());
-        $cmf->setCacheDriver($config->getMetadataCache());
+        if ($cacheItemPool){
+            $cmf->setCache($cacheItemPool);
+        }
 
         $this->unitOfWork    = new UnitOfWork($cmf, $storageDriver, $config);
         $this->storageDriver = $storageDriver;
