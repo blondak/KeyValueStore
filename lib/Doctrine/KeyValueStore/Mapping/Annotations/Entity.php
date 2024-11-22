@@ -20,6 +20,8 @@
 
 namespace Doctrine\KeyValueStore\Mapping\Annotations;
 
+use Attribute;
+
 /**
  * @Annotation
  * @NamedArgumentConstructor()
