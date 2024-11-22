@@ -22,11 +22,19 @@ namespace Doctrine\KeyValueStore\Mapping\Annotations;
 
 /**
  * @Annotation
+ * @NamedArgumentConstructor()
  */
+#[Attribute(Attribute::TARGET_CLASS)]
 class Entity
 {
     /**
-     * @var string
+     * @var string|null
+     * @readonly
      */
     public $storageName;
+
+    public function __construct(?string $storageName = null)
+    {
+        $this->storageName = $storageName;
+    }
 }

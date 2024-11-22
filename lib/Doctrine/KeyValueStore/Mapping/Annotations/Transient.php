@@ -22,7 +22,9 @@ namespace Doctrine\KeyValueStore\Mapping\Annotations;
 
 /**
  * @Annotation
+ * @NamedArgumentConstructor()
  */
+#[Attribute(Attribute::TARGET_PROPERTY)]
 class Transient
 {
 }
