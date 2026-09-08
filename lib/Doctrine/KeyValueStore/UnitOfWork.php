@@ -61,7 +61,7 @@ class UnitOfWork
     private $identityMap         = array();
     private $idConverter;
 
-    public function __construct(ClassMetadataFactory $cmf, Storage $storageDriver, Configuration $config = null)
+    public function __construct(ClassMetadataFactory $cmf, Storage $storageDriver, ?Configuration $config = null)
     {
         $this->cmf           = $cmf;
         $this->storageDriver = $storageDriver;
