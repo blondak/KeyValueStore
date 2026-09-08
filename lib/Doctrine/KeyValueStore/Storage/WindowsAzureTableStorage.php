@@ -105,7 +105,7 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
      * @param HttpClient $client
      * @param AuthorizationSchema $authorization
      */
-    public function __construct(Client $client, $accountName, AuthorizationSchema $authorization, \DateTime $now = null)
+    public function __construct(Client $client, $accountName, AuthorizationSchema $authorization, ?\DateTime $now = null)
     {
         $this->client = $client;
         $this->authorization = $authorization;
@@ -319,7 +319,7 @@ class WindowsAzureTableStorage implements Storage, RangeQueryStorage
         return $data;
     }
 
-    public function executeRangeQuery(RangeQuery $query, $storageName, $key, \Closure $hydrateRow = null)
+    public function executeRangeQuery(RangeQuery $query, $storageName, $key, ?\Closure $hydrateRow = null)
     {
         $headers = array(
             'Content-Type' => 'application/atom+xml',
