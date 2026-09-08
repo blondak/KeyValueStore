@@ -13,6 +13,14 @@ The Persistence interfaces are rather overkill for many implementations in the N
 * Data-mapper as any other Doctrine library and persistence and data-objects are seperated.
 * Inheritance (Single- or Multiple-Storage)
 
+## PHP requirements
+
+The library requires PHP 7.1+ or PHP 8.x. On PHP 7, use docblock
+annotations for mapping. Native attribute mapping requires PHP 8.0+;
+the single-line attribute declarations are treated as comments on PHP 7.
+Dependency versions and optional storage SDKs must also support the PHP
+version in use.
+
 ## Implementations
 
 Following vendors are targeted:
