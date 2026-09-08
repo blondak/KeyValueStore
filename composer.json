@@ -1,19 +1,13 @@
 {
     "name": "flexydigital/key-value-store",
     "require": {
-        "php": "^5.5|^7.0|^8.0",
+        "php": "^7.1 || ^8.0",
         "doctrine/common": "*"
     },
     "require-dev": {
         "riak/riak-client": "dev-master",
         "microsoft/windowsazure": "dev-master"
     },
-    "repositories": [
-        {
-            "type": "pear",
-            "url": "http://pear.php.net"
-        }
-    ],
     "suggest": {
         "riak/riak-client": "to use the Riak storage",
         "ext-couchbase": "to use the Couchbase storage",

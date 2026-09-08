@@ -179,7 +179,7 @@ class AzureSdkTableStorage implements Storage, RangeQueryStorage
     /**
      * {@inheritDoc}
      */
-    public function executeRangeQuery(RangeQuery $query, $storageName, $key, \Closure $hydrateRow = null)
+    public function executeRangeQuery(RangeQuery $query, $storageName, $key, ?\Closure $hydrateRow = null)
     {
         $filters = array("PartitionKey eq " . $this->quoteFilterValue($query->getPartitionKey()));
 

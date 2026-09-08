@@ -37,5 +37,5 @@ interface RangeQueryStorage
      * @param Closure $hydrateRow
      * @return ResultIterator
      */
-    function executeRangeQuery(RangeQuery $query, $storageName, $key, \Closure $hydrateRow = null);
+    function executeRangeQuery(RangeQuery $query, $storageName, $key, ?\Closure $hydrateRow = null);
 }
